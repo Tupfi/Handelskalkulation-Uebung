@@ -236,7 +236,10 @@ const KalkulationUebung = () => {
                 listeneinkaufspreis: k1_listeneinkauf,           // Vorgabe
                 lieferantenrabatt_prozent: k1_lieferantenrabatt_prozent,  // Vorgabe
                 lieferantenskonto_prozent: k1_lieferantenskonto_prozent,  // Vorgabe
-                selbstkosten: k1_selbstkosten                    // Vorgabe
+                selbstkosten: k1_selbstkosten,                    // Vorgabe
+                gewinn_prozent: k1_gewinn_prozent,
+                kundenskonto_prozent: k1_kundenskonto_prozent,    // Vorgabe
+                kundenrabatt_prozent: k1_kundenrabatt_prozent    // Vorgabe
                 // Alle anderen Werte sind zu berechnen
             },
             kalk2: {
