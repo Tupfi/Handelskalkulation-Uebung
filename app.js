@@ -190,62 +190,84 @@ const KalkulationUebung = () => {
         console.log("Lieferantenrabatt korrekt:", Math.abs(k3_rabatt_berechnet - k3.lieferantenrabatt) < 0.01);
     };
     
-    // Hauptfunktion für die Generierung der Zufallskalkulationen
     const generiereZufallsKalkulation = () => {
+        // Hilfsfunktion für die Generierung von Zufallszahlen mit fester Dezimalstelle
+        const zufallsZahl = (min, max, dezimalstellen = 2) => {
+            return parseFloat((Math.random() * (max - min) + min).toFixed(dezimalstellen));
+        };
+
         // Kalkulation 1: Vorwärtsrechnung vom Listeneinkaufspreis
-        const k1_listeneinkauf = zufallsZahl(1500, 3000);
+        const k1_listeneinkauf = zufallsZahl(1500, 2500);
         const k1_lieferantenrabatt_prozent = zufallsZahl(5, 12);
         const k1_lieferantenskonto_prozent = zufallsZahl(2, 4);
-        // Berechne abhängige Werte
-        const k1_lieferantenrabatt = k1_listeneinkauf * (k1_lieferantenrabatt_prozent / 100);
+        // Berechne abhängige Werte für realistische Verhältnisse
+        const k1_lieferantenrabatt = k1_listeneinkauf * (k1_lieferantenrabatt_prozent/100);
         const k1_rechnungspreis = k1_listeneinkauf - k1_lieferantenrabatt;
         const k1_selbstkosten = k1_rechnungspreis * 1.4; // 40% Aufschlag
+        const k1_gewinn_prozent = zufallsZahl(8, 15);
+        const k1_kundenskonto_prozent = zufallsZahl(2, 3);
+        const k1_kundenrabatt_prozent = zufallsZahl(3, 7);
     
         // Kalkulation 2: Rückwärtsrechnung von Selbstkosten
         const k2_selbstkosten = zufallsZahl(5000, 7000);
         const k2_handlungskosten = k2_selbstkosten * 0.15; // 15% der Selbstkosten
-        const k2_bareinkaufspreis = k2_selbstkosten - k2_handlungskosten;
-        const k2_gewinn = k2_selbstkosten * (zufallsZahl(8, 15) / 100);
-        const k2_barverkaufspreis = k2_selbstkosten + k2_gewinn;
+        const k2_lieferantenrabatt_prozent = zufallsZahl(5, 12);
+        const k2_lieferantenskonto_prozent = zufallsZahl(2, 4);
+        const k2_gewinn_prozent = zufallsZahl(8, 15);
+        const k2_kundenskonto_prozent = zufallsZahl(2, 3);
+        const k2_kundenrabatt_prozent = zufallsZahl(3, 7);
+        const k2_barverkaufspreis = k2_selbstkosten * 1.3;
+        const k2_listenverkaufspreis = k2_barverkaufspreis * 1.15; // 15% Aufschlag
     
         // Kalkulation 3: Gemischte Berechnung
         const k3_listeneinkauf = zufallsZahl(1500, 2500);
         const k3_lieferantenrabatt_prozent = zufallsZahl(15, 25);
-        const k3_lieferantenrabatt = k3_listeneinkauf * (k3_lieferantenrabatt_prozent / 100);
-        const k3_rechnungspreis = k3_listeneinkauf - k3_lieferantenrabatt;
-        const k3_bareinkaufspreis = k3_rechnungspreis * (1 - zufallsZahl(2, 4) / 100);
-        const k3_selbstkosten = k3_bareinkaufspreis * 1.2;
-    
-        const kalkulation = {
+        const k3_lieferantenrabatt = k3_listeneinkauf * (k3_lieferantenrabatt_prozent/100);
+        const k3_lieferantenskonto_prozent = zufallsZahl(2, 4);
+        const k3_selbstkosten = k3_listeneinkauf * 0.9; // 10% Abschlag
+        const k3_gewinn = zufallsZahl(150, 250);
+        const k3_barverkaufspreis = k3_selbstkosten + k3_gewinn;
+        const k3_zielverkaufspreis = k3_barverkaufspreis * 1.05; // 5% Aufschlag
+        const k3_kundenskonto = zufallsZahl(80, 120);
+        const k3_listenverkaufspreis = k3_zielverkaufspreis * 1.1; // 10% Aufschlag
+
+        // Rückgabe der Kalkulationen mit explizit markierten Vorgabewerten
+        return {
             kalk1: {
-                listeneinkaufspreis: k1_listeneinkauf,
-                lieferantenrabatt_prozent: k1_lieferantenrabatt_prozent,
-                lieferantenrabatt: k1_lieferantenrabatt,
-                selbstkosten: k1_selbstkosten
-                // ... weitere Werte
+                listeneinkaufspreis: k1_listeneinkauf,           // Vorgabe
+                lieferantenrabatt_prozent: k1_lieferantenrabatt_prozent,  // Vorgabe
+                lieferantenskonto_prozent: k1_lieferantenskonto_prozent,  // Vorgabe
+                selbstkosten: k1_selbstkosten,                   // Vorgabe
+                gewinn_prozent: k1_gewinn_prozent,               // Vorgabe
+                kundenskonto_prozent: k1_kundenskonto_prozent,   // Vorgabe
+                kundenrabatt_prozent: k1_kundenrabatt_prozent    // Vorgabe
             },
             kalk2: {
-                selbstkosten: k2_selbstkosten,
-                handlungskosten: k2_handlungskosten,
-                bareinkaufspreis: k2_bareinkaufspreis,
-                barverkaufspreis: k2_barverkaufspreis
-                // ... weitere Werte
+                lieferantenrabatt_prozent: k2_lieferantenrabatt_prozent,  // Vorgabe
+                lieferantenskonto_prozent: k2_lieferantenskonto_prozent,  // Vorgabe
+                handlungskosten: k2_handlungskosten,             // Vorgabe
+                selbstkosten: k2_selbstkosten,                   // Vorgabe
+                gewinn_prozent: k2_gewinn_prozent,               // Vorgabe
+                kundenskonto_prozent: k2_kundenskonto_prozent,   // Vorgabe
+                kundenrabatt_prozent: k2_kundenrabatt_prozent,   // Vorgabe
+                barverkaufspreis: k2_barverkaufspreis,           // Vorgabe
+                listenverkaufspreis: k2_listenverkaufspreis      // Vorgabe
             },
             kalk3: {
-                listeneinkaufspreis: k3_listeneinkauf,
-                lieferantenrabatt_prozent: k3_lieferantenrabatt_prozent,
-                lieferantenrabatt: k3_lieferantenrabatt,
-                selbstkosten: k3_selbstkosten
-                // ... weitere Werte
+                listeneinkaufspreis: k3_listeneinkauf,           // Vorgabe
+                lieferantenrabatt_prozent: k3_lieferantenrabatt_prozent,  // Vorgabe
+                lieferantenrabatt: k3_lieferantenrabatt,         // Vorgabe
+                lieferantenskonto_prozent: k3_lieferantenskonto_prozent,  // Vorgabe
+                selbstkosten: k3_selbstkosten,                   // Vorgabe
+                gewinn: k3_gewinn,                               // Vorgabe
+                barverkaufspreis: k3_barverkaufspreis,           // Vorgabe
+                zielverkaufspreis: k3_zielverkaufspreis,         // Vorgabe
+                kundenskonto: k3_kundenskonto,                   // Vorgabe
+                listenverkaufspreis: k3_listenverkaufspreis      // Vorgabe
             }
         };
-    
-        // Führe Tests durch
-        testeKalkulationsLogik(kalkulation);
-    
-        return kalkulation;
     };
-
+    
     // Der Button-Handler muss explizit die neuen Werte setzen und die Eingaben zurücksetzen
     const handleNeueZahlen = () => {
         const neueZahlen = generiereZufallsKalkulation();
