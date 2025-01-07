@@ -253,48 +253,64 @@ const KalkulationUebung = () => {
         setUserInputs({ kalk1: {}, kalk2: {}, kalk3: {} });
     };
 
-    const renderZeile = (label, prozentFeld, betragFeld) => (
+    const istVorgabe = (kalk, feld) => {
+    // Überprüft, ob ein Wert als Vorgabe markiert werden soll
+    return vorgaben[kalk] && vorgaben[kalk][feld] !== undefined;
+    };
+
+const renderZeile = (label, prozentFeld, betragFeld) => {
+    // Hilfsfunktion zur Prüfung, ob ein Wert vorgegeben ist
+    const istVorgabe = (kalk, feld) => {
+        return vorgaben[kalk] && vorgaben[kalk][feld] !== undefined;
+    };
+
+    return (
         <tr>
             <td className="border p-2 font-medium">{label}</td>
             {['kalk1', 'kalk2', 'kalk3'].map((kalk) => (
                 <React.Fragment key={`${kalk}-${betragFeld}`}>
                     <td className="border p-2 w-32">
-                        {prozentFeld && vorgaben[kalk][prozentFeld] !== undefined && (
-                            <div className="yellow-bg p-1 rounded">
-                                {vorgaben[kalk][prozentFeld].toFixed(2)}%
-                            </div>
-                        )}
-                        {prozentFeld && vorgaben[kalk][prozentFeld] === undefined && (
-                            <input
-                                type="number"
-                                step="0.01"
-                                className={`input-field ${
-                                    userInputs[kalk][prozentFeld] ? 
-                                        pruefeEingabe(userInputs[kalk][prozentFeld], 
-                                            berechneKorrekt(kalk, vorgaben[kalk])[prozentFeld],
-                                            true) : // Hier übergeben wir true für Prozentwerte
-                                        ''
-                                }`}
-                                value={userInputs[kalk][prozentFeld] || ''}
-                                onChange={(e) => handleChange(kalk, prozentFeld, e.target.value)}
-                                placeholder="%"
-                            />
+                        {prozentFeld && (
+                            istVorgabe(kalk, prozentFeld) ? (
+                                // Vorgabewert für Prozente mit gelbem Hintergrund
+                                <div className="bg-yellow-100 p-1 rounded">
+                                    {vorgaben[kalk][prozentFeld].toFixed(2)}%
+                                </div>
+                            ) : (
+                                // Eingabefeld für Prozente
+                                <input
+                                    type="number"
+                                    step="0.01"
+                                    className={`w-full p-1 rounded border ${
+                                        userInputs[kalk][prozentFeld] ? 
+                                            pruefeEingabe(userInputs[kalk][prozentFeld], 
+                                                berechneKorrekt(kalk, vorgaben[kalk])[prozentFeld],
+                                                true) : 
+                                            ''
+                                    }`}
+                                    value={userInputs[kalk][prozentFeld] || ''}
+                                    onChange={(e) => handleChange(kalk, prozentFeld, e.target.value)}
+                                    placeholder="%"
+                                />
+                            )
                         )}
                     </td>
                     <td className="border p-2 w-32">
-                        {vorgaben[kalk][betragFeld] !== undefined ? (
-                            <div className="yellow-bg p-1 rounded">
+                        {istVorgabe(kalk, betragFeld) ? (
+                            // Vorgabewert für Beträge mit gelbem Hintergrund
+                            <div className="bg-yellow-100 p-1 rounded">
                                 {vorgaben[kalk][betragFeld].toFixed(2)} €
                             </div>
                         ) : (
+                            // Eingabefeld für Beträge
                             <input
                                 type="number"
                                 step="0.01"
-                                className={`input-field ${
+                                className={`w-full p-1 rounded border ${
                                     userInputs[kalk][betragFeld] ? 
                                         pruefeEingabe(userInputs[kalk][betragFeld], 
                                             berechneKorrekt(kalk, vorgaben[kalk])[betragFeld],
-                                            false) : // Hier übergeben wir false für Geldbeträge
+                                            false) : 
                                         ''
                                 }`}
                                 value={userInputs[kalk][betragFeld] || ''}
@@ -307,7 +323,7 @@ const KalkulationUebung = () => {
             ))}
         </tr>
     );
-
+};
     // Render der Hauptkomponente
     return (
         <div className="max-w-7xl mx-auto p-4">
