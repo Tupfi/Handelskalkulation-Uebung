@@ -140,6 +140,7 @@ const KalkulationUebung = () => {
     //};
 
     // Validiert die Benutzereingaben mit einer Toleranz von 0.05
+    // Validiert die Benutzereingaben mit einer Toleranz von 0.05
     const pruefeEingabe = (wert, korrekt, istProzent = false) => {
         if (!wert || typeof korrekt === 'undefined') return '';
         const eingabe = parseFloat(wert);
