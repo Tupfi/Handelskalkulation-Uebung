@@ -145,7 +145,7 @@ const KalkulationUebung = () => {
         
         // Für Beträge: Absolute Toleranz von 0.05
         const diff = Math.abs(eingabe - korrekt);
-        return diff <= 0.05 ? 'bg-green-100' : 'bg-red-100';
+        return diff <= 0.01 ? 'bg-green-100' : 'bg-red-100';
     };
 
     // Handler für Benutzereingaben
