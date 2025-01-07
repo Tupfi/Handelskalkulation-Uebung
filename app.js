@@ -253,11 +253,6 @@ const KalkulationUebung = () => {
         setUserInputs({ kalk1: {}, kalk2: {}, kalk3: {} });
     };
 
-    const istVorgabe = (kalk, feld) => {
-    // Überprüft, ob ein Wert als Vorgabe markiert werden soll
-    return vorgaben[kalk] && vorgaben[kalk][feld] !== undefined;
-    };
-
     const renderZeile = (label, prozentFeld, betragFeld) => {
         // Hilfsfunktion zur Prüfung, ob ein Wert vorgegeben ist
         const istVorgabe = (kalk, feld) => {
