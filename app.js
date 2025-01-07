@@ -231,39 +231,35 @@ const KalkulationUebung = () => {
         const k3_kundenskonto = zufallsZahl(80, 120);
         const k3_listenverkaufspreis = k3_zielverkaufspreis * 1.1; // 10% Aufschlag
 
-        // Rückgabe der Kalkulationen mit explizit markierten Vorgabewerten
         return {
             kalk1: {
                 listeneinkaufspreis: k1_listeneinkauf,           // Vorgabe
                 lieferantenrabatt_prozent: k1_lieferantenrabatt_prozent,  // Vorgabe
                 lieferantenskonto_prozent: k1_lieferantenskonto_prozent,  // Vorgabe
-                selbstkosten: k1_selbstkosten,                   // Vorgabe
-                gewinn_prozent: k1_gewinn_prozent,               // Vorgabe
-                kundenskonto_prozent: k1_kundenskonto_prozent,   // Vorgabe
-                kundenrabatt_prozent: k1_kundenrabatt_prozent    // Vorgabe
+                selbstkosten: k1_selbstkosten                    // Vorgabe
+                // Alle anderen Werte sind zu berechnen
             },
             kalk2: {
+                selbstkosten: k2_selbstkosten,                   // Vorgabe
+                handlungskosten: k2_handlungskosten,             // Vorgabe
                 lieferantenrabatt_prozent: k2_lieferantenrabatt_prozent,  // Vorgabe
                 lieferantenskonto_prozent: k2_lieferantenskonto_prozent,  // Vorgabe
-                handlungskosten: k2_handlungskosten,             // Vorgabe
-                selbstkosten: k2_selbstkosten,                   // Vorgabe
                 gewinn_prozent: k2_gewinn_prozent,               // Vorgabe
                 kundenskonto_prozent: k2_kundenskonto_prozent,   // Vorgabe
                 kundenrabatt_prozent: k2_kundenrabatt_prozent,   // Vorgabe
-                barverkaufspreis: k2_barverkaufspreis,           // Vorgabe
                 listenverkaufspreis: k2_listenverkaufspreis      // Vorgabe
+                // Barverkaufspreis und andere Werte sind zu berechnen
             },
             kalk3: {
-                listeneinkaufspreis: k3_listeneinkauf,           // Vorgabe
                 lieferantenrabatt_prozent: k3_lieferantenrabatt_prozent,  // Vorgabe
                 lieferantenrabatt: k3_lieferantenrabatt,         // Vorgabe
                 lieferantenskonto_prozent: k3_lieferantenskonto_prozent,  // Vorgabe
-                selbstkosten: k3_selbstkosten,                   // Vorgabe
                 gewinn: k3_gewinn,                               // Vorgabe
                 barverkaufspreis: k3_barverkaufspreis,           // Vorgabe
                 zielverkaufspreis: k3_zielverkaufspreis,         // Vorgabe
                 kundenskonto: k3_kundenskonto,                   // Vorgabe
                 listenverkaufspreis: k3_listenverkaufspreis      // Vorgabe
+                // Listeneinkaufspreis und andere Werte sind zu berechnen
             }
         };
     };
