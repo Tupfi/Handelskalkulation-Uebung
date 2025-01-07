@@ -96,7 +96,8 @@ const KalkulationUebung = () => {
                 gewinn,
                 barverkaufspreis,
                 kundenskonto,
-                zielverkaufspreis
+                zielverkaufspreis,
+                kundenrabatt
             };
         }
 
