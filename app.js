@@ -84,7 +84,7 @@ const KalkulationUebung = () => {
             const barverkaufspreis = vorgabe.selbstkosten + gewinn;
             const zielverkaufspreis = barverkaufspreis / (1 - vorgabe.kundenskonto_prozent / 100);
             const kundenskonto = zielverkaufspreis * (vorgabe.kundenskonto_prozent / 100);
-            const kundenrabatt = zielverkaufspreis / (1 - rabatt_prozent/100) * (rabatt_prozent/100)
+            const kundenrabatt = listenverkaufspreis - zielverkaufspreis;
             // Listenverkaufspreis ist bereits gegeben
 
             return {
