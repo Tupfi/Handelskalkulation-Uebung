@@ -191,45 +191,37 @@ const KalkulationUebung = () => {
     };
     
     const generiereZufallsKalkulation = () => {
-        // Hilfsfunktion für die Generierung von Zufallszahlen mit fester Dezimalstelle
-        const zufallsZahl = (min, max, dezimalstellen = 2) => {
-            return parseFloat((Math.random() * (max - min) + min).toFixed(dezimalstellen));
-        };
-
-        // Kalkulation 1: Vorwärtsrechnung vom Listeneinkaufspreis
+        // Kalkulation 1: Vorwärtsrechnung
         const k1_listeneinkauf = zufallsZahl(1500, 2500);
         const k1_lieferantenrabatt_prozent = zufallsZahl(5, 12);
-        const k1_lieferantenskonto_prozent = zufallsZahl(2, 4);
-        // Berechne abhängige Werte für realistische Verhältnisse
-        const k1_lieferantenrabatt = k1_listeneinkauf * (k1_lieferantenrabatt_prozent/100);
+        // Abhängige Berechnungen
+        const k1_lieferantenrabatt = (k1_listeneinkauf * k1_lieferantenrabatt_prozent) / 100;
         const k1_rechnungspreis = k1_listeneinkauf - k1_lieferantenrabatt;
-        const k1_selbstkosten = k1_rechnungspreis * 1.4; // 40% Aufschlag
-        const k1_gewinn_prozent = zufallsZahl(8, 15);
-        const k1_kundenskonto_prozent = zufallsZahl(2, 3);
-        const k1_kundenrabatt_prozent = zufallsZahl(3, 7);
+        const k1_lieferantenskonto_prozent = zufallsZahl(2, 4);
+        const k1_lieferantenskonto = (k1_rechnungspreis * k1_lieferantenskonto_prozent) / 100;
+        const k1_bareinkaufspreis = k1_rechnungspreis - k1_lieferantenskonto;
+        const k1_selbstkosten = k1_bareinkaufspreis * 1.4; // 40% Aufschlag für realistische Selbstkosten
     
         // Kalkulation 2: Rückwärtsrechnung von Selbstkosten
         const k2_selbstkosten = zufallsZahl(5000, 7000);
-        const k2_handlungskosten = k2_selbstkosten * 0.15; // 15% der Selbstkosten
-        const k2_lieferantenrabatt_prozent = zufallsZahl(5, 12);
+        const k2_handlungskosten = Math.round(k2_selbstkosten * 0.15 * 100) / 100; // 15% der Selbstkosten, gerundet
+        const k2_bareinkaufspreis = k2_selbstkosten - k2_handlungskosten;
+        
+        // Die restlichen Werte müssen rückwärts berechnet werden
         const k2_lieferantenskonto_prozent = zufallsZahl(2, 4);
-        const k2_gewinn_prozent = zufallsZahl(8, 15);
-        const k2_kundenskonto_prozent = zufallsZahl(2, 3);
-        const k2_kundenrabatt_prozent = zufallsZahl(3, 7);
-        const k2_barverkaufspreis = k2_selbstkosten * 1.3;
-        const k2_listenverkaufspreis = k2_barverkaufspreis * 1.15; // 15% Aufschlag
+        const k2_rechnungspreis = k2_bareinkaufspreis / (1 - k2_lieferantenskonto_prozent/100);
+        const k2_lieferantenrabatt_prozent = zufallsZahl(5, 12);
+        const k2_listenverkaufspreis = k2_rechnungspreis / (1 - k2_lieferantenrabatt_prozent/100);
     
         // Kalkulation 3: Gemischte Berechnung
-        const k3_listeneinkauf = zufallsZahl(1500, 2500);
         const k3_lieferantenrabatt_prozent = zufallsZahl(15, 25);
-        const k3_lieferantenrabatt = k3_listeneinkauf * (k3_lieferantenrabatt_prozent/100);
-        const k3_lieferantenskonto_prozent = zufallsZahl(2, 4);
-        const k3_selbstkosten = k3_listeneinkauf * 0.9; // 10% Abschlag
-        const k3_gewinn = zufallsZahl(150, 250);
-        const k3_barverkaufspreis = k3_selbstkosten + k3_gewinn;
+        const k3_barverkaufspreis = zufallsZahl(1500, 2000);
+        // Restliche Werte in logischer Abhängigkeit
+        const k3_gewinn = Math.round(k3_barverkaufspreis * 0.15 * 100) / 100; // 15% des Barverkaufspreises
         const k3_zielverkaufspreis = k3_barverkaufspreis * 1.05; // 5% Aufschlag
-        const k3_kundenskonto = zufallsZahl(80, 120);
-        const k3_listenverkaufspreis = k3_zielverkaufspreis * 1.1; // 10% Aufschlag
+        const k3_kundenskonto = Math.round(k3_zielverkaufspreis * 0.05 * 100) / 100; // 5% des Zielverkaufspreises
+    
+        // Wichtig: Math.round(...* 100) / 100 für Rundung auf 2 Dezimalstellen
 
         return {
             kalk1: {
