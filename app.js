@@ -159,11 +159,6 @@ const KalkulationUebung = () => {
         }));
     };
     
-    // Hilfsfunktion für die Generierung von Zufallszahlen mit fester Dezimalstelle
-    const zufallsZahl = (min, max, dezimalstellen = 2) => {
-        return parseFloat((Math.random() * (max - min) + min).toFixed(dezimalstellen));
-    };
-    
     // Hilfsfunktion zum Testen der mathematischen Beziehungen
     const testeKalkulationsLogik = (kalkulation) => {
         console.log("=== Teste Kalkulationslogik ===");
@@ -191,6 +186,13 @@ const KalkulationUebung = () => {
     };
     
     const generiereZufallsKalkulation = () => {
+        
+        // Hilfsfunktion für präzise Zufallszahlen
+        const zufallsZahl = (min, max, dezimalstellen = 2) => {
+            const zahl = Math.random() * (max - min) + min;
+            return parseFloat(zahl.toFixed(dezimalstellen));
+        };
+        
         // Kalkulation 1: Vorwärtsrechnung
         const k1_listeneinkauf = zufallsZahl(1500, 2500);
         const k1_lieferantenrabatt_prozent = zufallsZahl(5, 12);
