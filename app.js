@@ -138,8 +138,8 @@ const KalkulationUebung = () => {
         
         // Für Prozentwerte: Berücksichtige den Wertebereich und relative Toleranz
         if (istProzent) {
-            // Relative Toleranz von 5% des Prozentwerts
-            const toleranz = Math.max(0.05, Math.abs(korrekt * 0.05));
+            // Relative Toleranz von 1% des Prozentwerts
+            const toleranz = Math.max(0.01, Math.abs(korrekt * 0.01));
             return Math.abs(eingabe - korrekt) <= toleranz ? 'bg-green-100' : 'bg-red-100';
         }
         
