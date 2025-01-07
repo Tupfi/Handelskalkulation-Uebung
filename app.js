@@ -132,15 +132,6 @@ const KalkulationUebung = () => {
     };
 
     // Validiert die Benutzereingaben mit einer Toleranz von 0.05
-    //const pruefeEingabe = (wert, korrekt) => {
-    //    if (!wert || typeof korrekt === 'undefined') return '';
-    //    const eingabe = parseFloat(wert);
-    //    const diff = Math.abs(eingabe - korrekt);
-    //    return diff <= 0.05 ? 'bg-green-100' : 'bg-red-100';
-    //};
-
-    // Validiert die Benutzereingaben mit einer Toleranz von 0.05
-    // Validiert die Benutzereingaben mit einer Toleranz von 0.05
     const pruefeEingabe = (wert, korrekt, istProzent = false) => {
         if (!wert || typeof korrekt === 'undefined') return '';
         const eingabe = parseFloat(wert);
@@ -230,7 +221,6 @@ const KalkulationUebung = () => {
         setUserInputs({ kalk1: {}, kalk2: {}, kalk3: {} });
     };
 
-    // Rendert eine einzelne Tabellenzeile
     const renderZeile = (label, prozentFeld, betragFeld) => (
         <tr>
             <td className="border p-2 font-medium">{label}</td>
@@ -246,7 +236,13 @@ const KalkulationUebung = () => {
                             <input
                                 type="number"
                                 step="0.01"
-                                className="input-field"
+                                className={`input-field ${
+                                    userInputs[kalk][prozentFeld] ? 
+                                        pruefeEingabe(userInputs[kalk][prozentFeld], 
+                                            berechneKorrekt(kalk, vorgaben[kalk])[prozentFeld],
+                                            true) : // Hier übergeben wir true für Prozentwerte
+                                        ''
+                                }`}
                                 value={userInputs[kalk][prozentFeld] || ''}
                                 onChange={(e) => handleChange(kalk, prozentFeld, e.target.value)}
                                 placeholder="%"
@@ -265,7 +261,8 @@ const KalkulationUebung = () => {
                                 className={`input-field ${
                                     userInputs[kalk][betragFeld] ? 
                                         pruefeEingabe(userInputs[kalk][betragFeld], 
-                                            berechneKorrekt(kalk, vorgaben[kalk])[betragFeld]) : 
+                                            berechneKorrekt(kalk, vorgaben[kalk])[betragFeld],
+                                            false) : // Hier übergeben wir false für Geldbeträge
                                         ''
                                 }`}
                                 value={userInputs[kalk][betragFeld] || ''}
