@@ -132,9 +132,26 @@ const KalkulationUebung = () => {
     };
 
     // Validiert die Benutzereingaben mit einer Toleranz von 0.05
-    const pruefeEingabe = (wert, korrekt) => {
+    //const pruefeEingabe = (wert, korrekt) => {
+    //    if (!wert || typeof korrekt === 'undefined') return '';
+    //    const eingabe = parseFloat(wert);
+    //    const diff = Math.abs(eingabe - korrekt);
+    //    return diff <= 0.05 ? 'bg-green-100' : 'bg-red-100';
+    //};
+
+    // Validiert die Benutzereingaben mit einer Toleranz von 0.05
+    const pruefeEingabe = (wert, korrekt, istProzent = false) => {
         if (!wert || typeof korrekt === 'undefined') return '';
         const eingabe = parseFloat(wert);
+        
+        // Für Prozentwerte: Berücksichtige den Wertebereich und relative Toleranz
+        if (istProzent) {
+            // Relative Toleranz von 5% des Prozentwerts
+            const toleranz = Math.max(0.05, Math.abs(korrekt * 0.05));
+            return Math.abs(eingabe - korrekt) <= toleranz ? 'bg-green-100' : 'bg-red-100';
+        }
+        
+        // Für Beträge: Absolute Toleranz von 0.05
         const diff = Math.abs(eingabe - korrekt);
         return diff <= 0.05 ? 'bg-green-100' : 'bg-red-100';
     };
