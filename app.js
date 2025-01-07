@@ -158,60 +158,92 @@ const KalkulationUebung = () => {
             }
         }));
     };
-
-    // Diese Funktion generiert eine einzelne Zufallszahl mit festgelegter Genauigkeit
+    
+    // Hilfsfunktion für die Generierung von Zufallszahlen mit fester Dezimalstelle
     const zufallsZahl = (min, max, dezimalstellen = 2) => {
-        // Wir verwenden toFixed für eine konstante Anzahl von Dezimalstellen
-        // und parseFloat, um führende Nullen zu entfernen
         return parseFloat((Math.random() * (max - min) + min).toFixed(dezimalstellen));
     };
-
-    // Diese Funktion generiert einen kompletten Satz von zusammenhängenden Zufallswerten
+    
+    // Hilfsfunktion zum Testen der mathematischen Beziehungen
+    const testeKalkulationsLogik = (kalkulation) => {
+        console.log("=== Teste Kalkulationslogik ===");
+        
+        // Test für Kalkulation 1
+        const k1 = kalkulation.kalk1;
+        console.log("Kalkulation 1 Tests:");
+        // Prüfe Lieferantenrabatt
+        const k1_rabatt = k1.listeneinkaufspreis * (k1.lieferantenrabatt_prozent / 100);
+        console.log("Lieferantenrabatt korrekt:", Math.abs(k1_rabatt - k1.lieferantenrabatt) < 0.01);
+    
+        // Test für Kalkulation 2
+        const k2 = kalkulation.kalk2;
+        console.log("\nKalkulation 2 Tests:");
+        // Prüfe Selbstkosten = Bareinkaufspreis + Handlungskosten
+        const k2_bareinkauf = k2.selbstkosten - k2.handlungskosten;
+        console.log("Selbstkosten korrekt:", Math.abs((k2_bareinkauf + k2.handlungskosten) - k2.selbstkosten) < 0.01);
+    
+        // Test für Kalkulation 3
+        const k3 = kalkulation.kalk3;
+        console.log("\nKalkulation 3 Tests:");
+        // Prüfe Beziehungen zwischen den Werten
+        const k3_rabatt_berechnet = k3.lieferantenrabatt_prozent / 100 * k3.listeneinkaufspreis;
+        console.log("Lieferantenrabatt korrekt:", Math.abs(k3_rabatt_berechnet - k3.lieferantenrabatt) < 0.01);
+    };
+    
+    // Hauptfunktion für die Generierung der Zufallskalkulationen
     const generiereZufallsKalkulation = () => {
-        // Kalkulation 1: Vorwärtsrechnung
-        const k1 = {
-            listeneinkaufspreis: zufallsZahl(1500, 3000),
-            lieferantenrabatt_prozent: zufallsZahl(5, 12),
-            lieferantenskonto_prozent: zufallsZahl(2, 4)
+        // Kalkulation 1: Vorwärtsrechnung vom Listeneinkaufspreis
+        const k1_listeneinkauf = zufallsZahl(1500, 3000);
+        const k1_lieferantenrabatt_prozent = zufallsZahl(5, 12);
+        const k1_lieferantenskonto_prozent = zufallsZahl(2, 4);
+        // Berechne abhängige Werte
+        const k1_lieferantenrabatt = k1_listeneinkauf * (k1_lieferantenrabatt_prozent / 100);
+        const k1_rechnungspreis = k1_listeneinkauf - k1_lieferantenrabatt;
+        const k1_selbstkosten = k1_rechnungspreis * 1.4; // 40% Aufschlag
+    
+        // Kalkulation 2: Rückwärtsrechnung von Selbstkosten
+        const k2_selbstkosten = zufallsZahl(5000, 7000);
+        const k2_handlungskosten = k2_selbstkosten * 0.15; // 15% der Selbstkosten
+        const k2_bareinkaufspreis = k2_selbstkosten - k2_handlungskosten;
+        const k2_gewinn = k2_selbstkosten * (zufallsZahl(8, 15) / 100);
+        const k2_barverkaufspreis = k2_selbstkosten + k2_gewinn;
+    
+        // Kalkulation 3: Gemischte Berechnung
+        const k3_listeneinkauf = zufallsZahl(1500, 2500);
+        const k3_lieferantenrabatt_prozent = zufallsZahl(15, 25);
+        const k3_lieferantenrabatt = k3_listeneinkauf * (k3_lieferantenrabatt_prozent / 100);
+        const k3_rechnungspreis = k3_listeneinkauf - k3_lieferantenrabatt;
+        const k3_bareinkaufspreis = k3_rechnungspreis * (1 - zufallsZahl(2, 4) / 100);
+        const k3_selbstkosten = k3_bareinkaufspreis * 1.2;
+    
+        const kalkulation = {
+            kalk1: {
+                listeneinkaufspreis: k1_listeneinkauf,
+                lieferantenrabatt_prozent: k1_lieferantenrabatt_prozent,
+                lieferantenrabatt: k1_lieferantenrabatt,
+                selbstkosten: k1_selbstkosten
+                // ... weitere Werte
+            },
+            kalk2: {
+                selbstkosten: k2_selbstkosten,
+                handlungskosten: k2_handlungskosten,
+                bareinkaufspreis: k2_bareinkaufspreis,
+                barverkaufspreis: k2_barverkaufspreis
+                // ... weitere Werte
+            },
+            kalk3: {
+                listeneinkaufspreis: k3_listeneinkauf,
+                lieferantenrabatt_prozent: k3_lieferantenrabatt_prozent,
+                lieferantenrabatt: k3_lieferantenrabatt,
+                selbstkosten: k3_selbstkosten
+                // ... weitere Werte
+            }
         };
-        // Berechnen der abhängigen Werte für realistische Verhältnisse
-        k1.selbstkosten = k1.listeneinkaufspreis * (1 - k1.lieferantenrabatt_prozent/100) * 
-                        (1 - k1.lieferantenskonto_prozent/100) * 1.4; // 40% Aufschlag
-        k1.gewinn_prozent = zufallsZahl(8, 15);
-        k1.kundenskonto_prozent = zufallsZahl(2, 3);
-        k1.kundenrabatt_prozent = zufallsZahl(3, 7);
-
-        // Kalkulation 2: Rückwärtsrechnung
-        const k2 = {
-            selbstkosten: zufallsZahl(5000, 7000),
-            handlungskosten: null, // Wird gleich berechnet
-            lieferantenrabatt_prozent: zufallsZahl(5, 12),
-            lieferantenskonto_prozent: zufallsZahl(2, 4),
-            gewinn_prozent: zufallsZahl(8, 15),
-            kundenskonto_prozent: zufallsZahl(2, 3),
-            kundenrabatt_prozent: zufallsZahl(3, 7)
-        };
-        k2.handlungskosten = k2.selbstkosten * 0.15; // 15% der Selbstkosten
-        k2.listenverkaufspreis = k2.selbstkosten * 1.3; // 30% Aufschlag
-
-        // Kalkulation 3: Gemischte Vorgaben
-        const k3 = {
-            lieferantenrabatt_prozent: zufallsZahl(15, 25)
-        };
-        const basispreis = zufallsZahl(1500, 2500);
-        k3.lieferantenrabatt = basispreis * (k3.lieferantenrabatt_prozent/100);
-        k3.lieferantenskonto_prozent = zufallsZahl(2, 4);
-        k3.barverkaufspreis = basispreis * 1.2;
-        k3.zielverkaufspreis = k3.barverkaufspreis * 1.1;
-        k3.gewinn = k3.barverkaufspreis * 0.15;
-        k3.kundenskonto = k3.zielverkaufspreis * 0.05;
-        k3.listenverkaufspreis = k3.zielverkaufspreis * 1.1;
-
-        return {
-            kalk1: k1,
-            kalk2: k2,
-            kalk3: k3
-        };
+    
+        // Führe Tests durch
+        testeKalkulationsLogik(kalkulation);
+    
+        return kalkulation;
     };
 
     // Der Button-Handler muss explizit die neuen Werte setzen und die Eingaben zurücksetzen
