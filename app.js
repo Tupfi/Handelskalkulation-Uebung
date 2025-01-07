@@ -84,6 +84,7 @@ const KalkulationUebung = () => {
             const barverkaufspreis = vorgabe.selbstkosten + gewinn;
             const zielverkaufspreis = barverkaufspreis / (1 - vorgabe.kundenskonto_prozent / 100);
             const kundenskonto = zielverkaufspreis * (vorgabe.kundenskonto_prozent / 100);
+            const kundenrabatt = zielverkaufspreis / (1 - rabatt_prozent/100) * (rabatt_prozent/100)
             // Listenverkaufspreis ist bereits gegeben
 
             return {
@@ -102,12 +103,12 @@ const KalkulationUebung = () => {
         // Kalkulation 3 - Gemischte Vorgaben
         if (kalk === 'kalk3') {
             // Rückwärtsrechnung vom gegebenen Lieferantenrabatt
-            const rechnungspreis = vorgabe.lieferantenrabatt / (vorgabe.lieferantenrabatt_prozent / 100);
-            const listeneinkaufspreis = rechnungspreis + vorgabe.lieferantenrabatt;
+            const listeneinkaufspreis = (vorgabe.lieferantenrabatt / vorgabe.lieferantenrabatt_prozent) * 100;
+            const rechnungspreis = listeneinkaufspreis - vorgabe.lieferantenrabatt;
             const lieferantenskonto = rechnungspreis * (vorgabe.lieferantenskonto_prozent / 100);
             const bareinkaufspreis = rechnungspreis - lieferantenskonto;
-            const handlungskosten = vorgabe.barverkaufspreis - bareinkaufspreis - vorgabe.gewinn;
-            const selbstkosten = bareinkaufspreis + handlungskosten;
+            const selbstkosten = vorgabe.barverkaufspreis - vorgabe.gewinn;
+            const handlungskosten = selbstkosten - bareinkaufspreis;
             const gewinn_prozent = (vorgabe.gewinn / selbstkosten) * 100;
             const kundenskonto_prozent = (vorgabe.kundenskonto / vorgabe.zielverkaufspreis) * 100;
             const kundenrabatt = vorgabe.listenverkaufspreis - vorgabe.zielverkaufspreis;
