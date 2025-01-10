@@ -108,20 +108,20 @@ const KalkulationUebung = () => {
             const lieferantenskonto = rechnungspreis * (vorgabe.lieferantenskonto_prozent / 100);
             const bareinkaufspreis = rechnungspreis - lieferantenskonto;
             
-            // Calculate operating costs (Handlungskosten)
+            // Berechne Handlungskosten
             const handlungskosten = bareinkaufspreis - vorgabe.barverkaufspreis + vorgabe.gewinn;
             
-            // Calculate selbstkosten (important: calculate this before gewinn_prozent)
+            // Berechne Selbstkosten
             const selbstkosten = bareinkaufspreis + handlungskosten;
             
-            // Calculate profit percentage based on selbstkosten
+            // Berechne Gewinnprozent basierend auf Selbstkosten
             const gewinn_prozent = (vorgabe.gewinn / selbstkosten) * 100;
             
-            // Calculate kundenrabatt and its percentage
+            // Berechne Kundenrabatt und dessen Prozentsatz
             const kundenrabatt = vorgabe.listenverkaufspreis - vorgabe.zielverkaufspreis;
             const kundenrabatt_prozent = (kundenrabatt / vorgabe.listenverkaufspreis) * 100;
             
-            // Calculate kundenskonto percentage
+            // Berechne Kundenskonto Prozentsatz
             const kundenskonto_prozent = (vorgabe.kundenskonto / vorgabe.zielverkaufspreis) * 100;
             
             return {
@@ -130,13 +130,17 @@ const KalkulationUebung = () => {
                 lieferantenskonto,
                 bareinkaufspreis,
                 handlungskosten,
-                selbstkosten,          // Now this is properly defined
+                selbstkosten,
                 gewinn_prozent,
                 kundenskonto_prozent,
                 kundenrabatt,
                 kundenrabatt_prozent
             };
         }
+    
+        // Wichtig: Standardrückgabe für den Fall, dass keine der Kalkulationen zutrifft
+        return {};
+    };
 
     // Validiert die Benutzereingaben mit einer Toleranz von 0.05
     const pruefeEingabe = (wert, korrekt, istProzent = false) => {
