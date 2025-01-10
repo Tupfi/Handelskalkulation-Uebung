@@ -186,7 +186,6 @@ const KalkulationUebung = () => {
     };
     
     const generiereZufallsKalkulation = () => {
-        
         // Hilfsfunktion für präzise Zufallszahlen
         const zufallsZahl = (min, max, dezimalstellen = 2) => {
             const zahl = Math.random() * (max - min) + min;
@@ -196,67 +195,74 @@ const KalkulationUebung = () => {
         // Kalkulation 1: Vorwärtsrechnung
         const k1_listeneinkauf = zufallsZahl(1500, 2500);
         const k1_lieferantenrabatt_prozent = zufallsZahl(5, 12);
-        // Abhängige Berechnungen
+        const k1_lieferantenskonto_prozent = zufallsZahl(2, 4);
+        const k1_gewinn_prozent = zufallsZahl(8, 15);
+        const k1_kundenskonto_prozent = zufallsZahl(2, 3);
+        const k1_kundenrabatt_prozent = zufallsZahl(3, 7);
+        
+        // Berechne abhängige Werte für die mathematische Konsistenz
         const k1_lieferantenrabatt = (k1_listeneinkauf * k1_lieferantenrabatt_prozent) / 100;
         const k1_rechnungspreis = k1_listeneinkauf - k1_lieferantenrabatt;
-        const k1_lieferantenskonto_prozent = zufallsZahl(2, 4);
         const k1_lieferantenskonto = (k1_rechnungspreis * k1_lieferantenskonto_prozent) / 100;
         const k1_bareinkaufspreis = k1_rechnungspreis - k1_lieferantenskonto;
-        const k1_selbstkosten = k1_bareinkaufspreis * 1.4; // 40% Aufschlag für realistische Selbstkosten
+        const k1_selbstkosten = Math.round(k1_bareinkaufspreis * 1.4 * 100) / 100; // 40% Aufschlag
     
-        // Kalkulation 2: Rückwärtsrechnung von Selbstkosten
+        // Kalkulation 2: Rückwärtsrechnung
         const k2_selbstkosten = zufallsZahl(5000, 7000);
-        const k2_handlungskosten = Math.round(k2_selbstkosten * 0.15 * 100) / 100; // 15% der Selbstkosten, gerundet
-        const k2_bareinkaufspreis = k2_selbstkosten - k2_handlungskosten;
-        
-        // Die restlichen Werte müssen rückwärts berechnet werden
-        const k2_lieferantenskonto_prozent = zufallsZahl(2, 4);
-        const k2_rechnungspreis = k2_bareinkaufspreis / (1 - k2_lieferantenskonto_prozent/100);
+        const k2_handlungskosten = Math.round(k2_selbstkosten * 0.15 * 100) / 100;
         const k2_lieferantenrabatt_prozent = zufallsZahl(5, 12);
-        const k2_listenverkaufspreis = k2_rechnungspreis / (1 - k2_lieferantenrabatt_prozent/100);
+        const k2_lieferantenskonto_prozent = zufallsZahl(2, 4);
+        const k2_gewinn_prozent = zufallsZahl(8, 15);
+        const k2_kundenskonto_prozent = zufallsZahl(2, 3);
+        const k2_kundenrabatt_prozent = zufallsZahl(3, 7);
+        
+        // Berechne den Listenverkaufspreis für Kalkulation 2
+        const k2_gewinn = k2_selbstkosten * (k2_gewinn_prozent / 100);
+        const k2_barverkaufspreis = k2_selbstkosten + k2_gewinn;
+        const k2_zielverkaufspreis = k2_barverkaufspreis / (1 - k2_kundenskonto_prozent / 100);
+        const k2_listenverkaufspreis = Math.round(k2_zielverkaufspreis / (1 - k2_kundenrabatt_prozent / 100) * 100) / 100;
     
         // Kalkulation 3: Gemischte Berechnung
         const k3_lieferantenrabatt_prozent = zufallsZahl(15, 25);
-        const k3_barverkaufspreis = zufallsZahl(1500, 2000);
-        // Restliche Werte in logischer Abhängigkeit
-        const k3_gewinn = Math.round(k3_barverkaufspreis * 0.15 * 100) / 100; // 15% des Barverkaufspreises
-        const k3_zielverkaufspreis = k3_barverkaufspreis * 1.05; // 5% Aufschlag
-        const k3_kundenskonto = Math.round(k3_zielverkaufspreis * 0.05 * 100) / 100; // 5% des Zielverkaufspreises
+        const k3_lieferantenskonto_prozent = zufallsZahl(2, 3);
+        const k3_listenverkaufspreis = zufallsZahl(1500, 2000);
+        
+        // Berechne die restlichen Werte für Kalkulation 3 rückwärts
+        const k3_lieferantenrabatt = Math.round(k3_listenverkaufspreis * (k3_lieferantenrabatt_prozent / 100) * 100) / 100;
+        const k3_zielverkaufspreis = Math.round(k3_listenverkaufspreis * 0.92 * 100) / 100; // 8% Kundenrabatt
+        const k3_kundenskonto = Math.round(k3_zielverkaufspreis * 0.05 * 100) / 100; // 5% Kundenskonto
+        const k3_barverkaufspreis = k3_zielverkaufspreis - k3_kundenskonto;
+        const k3_gewinn = Math.round(k3_barverkaufspreis * 0.15 * 100) / 100; // 15% vom Barverkaufspreis
     
-        // Wichtig: Math.round(...* 100) / 100 für Rundung auf 2 Dezimalstellen
-
         return {
             kalk1: {
-                listeneinkaufspreis: k1_listeneinkauf,           // Vorgabe
-                lieferantenrabatt_prozent: k1_lieferantenrabatt_prozent,  // Vorgabe
-                lieferantenskonto_prozent: k1_lieferantenskonto_prozent,  // Vorgabe
-                selbstkosten: k1_selbstkosten,                    // Vorgabe
+                listeneinkaufspreis: k1_listeneinkauf,
+                lieferantenrabatt_prozent: k1_lieferantenrabatt_prozent,
+                lieferantenskonto_prozent: k1_lieferantenskonto_prozent,
+                selbstkosten: k1_selbstkosten,
                 gewinn_prozent: k1_gewinn_prozent,
-                kundenskonto_prozent: k1_kundenskonto_prozent,    // Vorgabe
-                kundenrabatt_prozent: k1_kundenrabatt_prozent    // Vorgabe
-                // Alle anderen Werte sind zu berechnen
+                kundenskonto_prozent: k1_kundenskonto_prozent,
+                kundenrabatt_prozent: k1_kundenrabatt_prozent
             },
             kalk2: {
-                selbstkosten: k2_selbstkosten,                   // Vorgabe
-                handlungskosten: k2_handlungskosten,             // Vorgabe
-                lieferantenrabatt_prozent: k2_lieferantenrabatt_prozent,  // Vorgabe
-                lieferantenskonto_prozent: k2_lieferantenskonto_prozent,  // Vorgabe
-                gewinn_prozent: k2_gewinn_prozent,               // Vorgabe
-                kundenskonto_prozent: k2_kundenskonto_prozent,   // Vorgabe
-                kundenrabatt_prozent: k2_kundenrabatt_prozent,   // Vorgabe
-                listenverkaufspreis: k2_listenverkaufspreis      // Vorgabe
-                // Barverkaufspreis und andere Werte sind zu berechnen
+                selbstkosten: k2_selbstkosten,
+                handlungskosten: k2_handlungskosten,
+                lieferantenrabatt_prozent: k2_lieferantenrabatt_prozent,
+                lieferantenskonto_prozent: k2_lieferantenskonto_prozent,
+                gewinn_prozent: k2_gewinn_prozent,
+                kundenskonto_prozent: k2_kundenskonto_prozent,
+                kundenrabatt_prozent: k2_kundenrabatt_prozent,
+                listenverkaufspreis: k2_listenverkaufspreis
             },
             kalk3: {
-                lieferantenrabatt_prozent: k3_lieferantenrabatt_prozent,  // Vorgabe
-                lieferantenrabatt: k3_lieferantenrabatt,         // Vorgabe
-                lieferantenskonto_prozent: k3_lieferantenskonto_prozent,  // Vorgabe
-                gewinn: k3_gewinn,                               // Vorgabe
-                barverkaufspreis: k3_barverkaufspreis,           // Vorgabe
-                zielverkaufspreis: k3_zielverkaufspreis,         // Vorgabe
-                kundenskonto: k3_kundenskonto,                   // Vorgabe
-                listenverkaufspreis: k3_listenverkaufspreis      // Vorgabe
-                // Listeneinkaufspreis und andere Werte sind zu berechnen
+                lieferantenrabatt_prozent: k3_lieferantenrabatt_prozent,
+                lieferantenrabatt: k3_lieferantenrabatt,
+                lieferantenskonto_prozent: k3_lieferantenskonto_prozent,
+                gewinn: k3_gewinn,
+                barverkaufspreis: k3_barverkaufspreis,
+                zielverkaufspreis: k3_zielverkaufspreis,
+                kundenskonto: k3_kundenskonto,
+                listenverkaufspreis: k3_listenverkaufspreis
             }
         };
     };
@@ -265,7 +271,12 @@ const KalkulationUebung = () => {
     const handleNeueZahlen = () => {
         const neueZahlen = generiereZufallsKalkulation();
         setVorgaben(neueZahlen);
-        setUserInputs({ kalk1: {}, kalk2: {}, kalk3: {} });
+        // Reset all user inputs
+        setUserInputs({
+            kalk1: {},
+            kalk2: {},
+            kalk3: {}
+        });
     };
 
     const renderZeile = (label, prozentFeld, betragFeld) => {
