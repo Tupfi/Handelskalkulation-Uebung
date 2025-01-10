@@ -102,18 +102,18 @@ const KalkulationUebung = () => {
 
         // Kalkulation 3 - Gemischte Vorgaben
         if (kalk === 'kalk3') {
-            // Rückwärtsrechnung vom gegebenen Lieferantenrabatt
-            const listeneinkaufspreis = (vorgabe.lieferantenrabatt / vorgabe.lieferantenrabatt_prozent) * 100;
+            // Start with known values
+            const listeneinkaufspreis = vorgabe.lieferantenrabatt / (vorgabe.lieferantenrabatt_prozent / 100);
             const rechnungspreis = listeneinkaufspreis - vorgabe.lieferantenrabatt;
             const lieferantenskonto = rechnungspreis * (vorgabe.lieferantenskonto_prozent / 100);
             const bareinkaufspreis = rechnungspreis - lieferantenskonto;
-            const selbstkosten = vorgabe.barverkaufspreis - vorgabe.gewinn;
-            const handlungskosten = selbstkosten - bareinkaufspreis;
-            const gewinn_prozent = (vorgabe.gewinn / selbstkosten) * 100;
-            const kundenskonto_prozent = (vorgabe.kundenskonto / vorgabe.zielverkaufspreis) * 100;
-            const kundenrabatt = vorgabe.listenverkaufspreis - vorgabe.zielverkaufspreis;
-            const kundenrabatt_prozent = (kundenrabatt / vorgabe.listenverkaufspreis) * 100;
-
+            
+            // Calculate operating costs (Handlungskosten)
+            const handlungskosten = bareinkaufspreis - vorgabe.barverkaufspreis + vorgabe.gewinn;
+            
+            // Calculate profit percentage
+            const gewinn_prozent = (vorgabe.gewinn / (bareinkaufspreis - handlungskosten)) * 100;
+            
             return {
                 listeneinkaufspreis,
                 rechnungspreis,
@@ -136,14 +136,13 @@ const KalkulationUebung = () => {
         if (!wert || typeof korrekt === 'undefined') return '';
         const eingabe = parseFloat(wert);
         
-        // Für Prozentwerte: Berücksichtige den Wertebereich und relative Toleranz
         if (istProzent) {
-            // Relative Toleranz von 1% des Prozentwerts
-            const toleranz = Math.max(0.01, Math.abs(korrekt * 0.01));
+            // Increase tolerance for percentage values to 0.1
+            const toleranz = Math.max(0.1, Math.abs(korrekt * 0.01));
             return Math.abs(eingabe - korrekt) <= toleranz ? 'bg-green-100' : 'bg-red-100';
         }
         
-        // Für Beträge: Absolute Toleranz von 0.05
+        // For monetary values, keep the existing tolerance
         const diff = Math.abs(eingabe - korrekt);
         return diff <= 0.01 ? 'bg-green-100' : 'bg-red-100';
     };
