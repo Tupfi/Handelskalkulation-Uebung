@@ -111,8 +111,18 @@ const KalkulationUebung = () => {
             // Calculate operating costs (Handlungskosten)
             const handlungskosten = bareinkaufspreis - vorgabe.barverkaufspreis + vorgabe.gewinn;
             
-            // Calculate profit percentage
-            const gewinn_prozent = (vorgabe.gewinn / (bareinkaufspreis - handlungskosten)) * 100;
+            // Calculate selbstkosten (important: calculate this before gewinn_prozent)
+            const selbstkosten = bareinkaufspreis + handlungskosten;
+            
+            // Calculate profit percentage based on selbstkosten
+            const gewinn_prozent = (vorgabe.gewinn / selbstkosten) * 100;
+            
+            // Calculate kundenrabatt and its percentage
+            const kundenrabatt = vorgabe.listenverkaufspreis - vorgabe.zielverkaufspreis;
+            const kundenrabatt_prozent = (kundenrabatt / vorgabe.listenverkaufspreis) * 100;
+            
+            // Calculate kundenskonto percentage
+            const kundenskonto_prozent = (vorgabe.kundenskonto / vorgabe.zielverkaufspreis) * 100;
             
             return {
                 listeneinkaufspreis,
@@ -120,16 +130,13 @@ const KalkulationUebung = () => {
                 lieferantenskonto,
                 bareinkaufspreis,
                 handlungskosten,
-                selbstkosten,
+                selbstkosten,          // Now this is properly defined
                 gewinn_prozent,
                 kundenskonto_prozent,
                 kundenrabatt,
                 kundenrabatt_prozent
             };
         }
-
-        return {};
-    };
 
     // Validiert die Benutzereingaben mit einer Toleranz von 0.05
     const pruefeEingabe = (wert, korrekt, istProzent = false) => {
