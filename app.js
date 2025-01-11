@@ -134,9 +134,13 @@ const KalkulationUebung = () => {
             const rechnungspreis = listeneinkaufspreis - vorgabe.lieferantenrabatt;
             const lieferantenskonto = rechnungspreis * (vorgabe.lieferantenskonto_prozent / 100);
             const bareinkaufspreis = rechnungspreis - lieferantenskonto;
+
+            // Selbstkosten berechnen aus Barverkaufspreis und Gewinn
+            const selbstkosten = vorgabe.barverkaufspreis - vorgabe.gewinn;
             
-            const handlungskosten = bareinkaufspreis - vorgabe.barverkaufspreis + vorgabe.gewinn;
-            const selbstkosten = bareinkaufspreis + handlungskosten;
+            // Handlungskosten als Differenz
+            const handlungskosten = selbstkosten - bareinkaufspreis;
+            
             const gewinn_prozent = (vorgabe.gewinn / selbstkosten) * 100;
             
             const kundenrabatt = vorgabe.listenverkaufspreis - vorgabe.zielverkaufspreis;
@@ -148,8 +152,8 @@ const KalkulationUebung = () => {
                 rechnungspreis,
                 lieferantenskonto,
                 bareinkaufspreis,
-                handlungskosten,
                 selbstkosten,
+                handlungskosten,
                 gewinn_prozent,
                 kundenskonto_prozent,
                 kundenrabatt,
@@ -284,8 +288,6 @@ const KalkulationUebung = () => {
                 zielverkaufspreis: k3_zielverkaufspreis,
                 kundenskonto: k3_kundenskonto,
                 listenverkaufspreis: k3_listenverkaufspreis,
-                selbstkosten: k3_selbstkosten,     // Neu hinzugefügt
-                handlungskosten: k3_handlungskosten // Neu hinzugefügt
             }
         };
     };
