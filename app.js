@@ -231,11 +231,16 @@ const KalkulationUebung = () => {
         const k3_bareinkaufspreis = Math.round(k3_selbstkosten * 0.92 * 100) / 100;
         
         // Handlungskosten korrekt als Differenz zwischen Selbstkosten und Bareinkaufspreis
-        const k3_handlungskosten = Math.round((k3_selbstkosten - k3_bareinkaufspreis) * 100) / 100;
+        const k3_handlungskosten = k3_selbstkosten - k3_bareinkaufspreis;
         
         // Berechnung der Lieferantenwerte
         const k3_lieferantenskonto_prozent = zufallsZahl(2, 3);
         const k3_lieferantenrabatt_prozent = zufallsZahl(15, 25);
+
+        // Neue zufällige Prozentsätze für Gewinn, Kundenskonto und Kundenrabatt
+        const k3_gewinn_prozent = zufallsZahl(12, 18);  // Gewinn zwischen 12% und 18%
+        const k3_kundenskonto_prozent = zufallsZahl(4, 6);  // Kundenskonto zwischen 4% und 6%
+        const k3_kundenrabatt_prozent = zufallsZahl(7, 9);  // Kundenrabatt zwischen 7% und 9%
         
         // Vom Bareinkaufspreis zum Rechnungspreis (unter Berücksichtigung des Lieferantenskontos)
         const k3_rechnungspreis = Math.round(k3_bareinkaufspreis / (1 - k3_lieferantenskonto_prozent / 100) * 100) / 100;
@@ -245,17 +250,15 @@ const KalkulationUebung = () => {
         const k3_listeneinkaufspreis = Math.round(k3_rechnungspreis / (1 - k3_lieferantenrabatt_prozent / 100) * 100) / 100;
         const k3_lieferantenrabatt = Math.round((k3_listeneinkaufspreis - k3_rechnungspreis) * 100) / 100;
         
-        // Gewinnberechnung (15% der Selbstkosten)
-        const k3_gewinn = Math.round(k3_selbstkosten * 0.15 * 100) / 100;
+        // Berechnung mit den neuen Prozentsätzen
+        const k3_gewinn = Math.round(k3_selbstkosten * (k3_gewinn_prozent / 100) * 100) / 100;
         const k3_barverkaufspreis = k3_selbstkosten + k3_gewinn;
         
-        // Zielverkaufspreis mit 5% Kundenskonto im Hundert
-        const k3_kundenskonto_prozent = 5;
+        // Kundenskonto im Hundert berechnen
         const k3_kundenskonto = Math.round(k3_barverkaufspreis * (k3_kundenskonto_prozent / (100 - k3_kundenskonto_prozent)) * 100) / 100;
         const k3_zielverkaufspreis = k3_barverkaufspreis + k3_kundenskonto;
         
-        // Listenverkaufspreis mit 8% Kundenrabatt im Hundert
-        const k3_kundenrabatt_prozent = 8;
+        // Kundenrabatt im Hundert berechnen
         const k3_kundenrabatt = Math.round(k3_zielverkaufspreis * (k3_kundenrabatt_prozent / (100 - k3_kundenrabatt_prozent)) * 100) / 100;
         const k3_listenverkaufspreis = k3_zielverkaufspreis + k3_kundenrabatt;
 
