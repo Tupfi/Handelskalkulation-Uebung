@@ -220,27 +220,40 @@ const KalkulationUebung = () => {
         const k2_zielverkaufspreis = Math.round(k2_barverkaufspreis * (1 + k2_kundenskonto_prozent / (100 - k2_kundenskonto_prozent)) * 100) / 100;
         const k2_listenverkaufspreis = Math.round(k2_zielverkaufspreis * (1 + k2_kundenrabatt_prozent / (100 - k2_kundenrabatt_prozent)) * 100) / 100;
 
-        // Kalkulation 3: Berechnung mit Selbstkosten als Ankerpunkt
+        // Wir beginnen mit den Selbstkosten als Ankerpunkt, um Konsistenz zu gewährleisten
         const k3_selbstkosten = zufallsZahl(1200, 1800);
-        const k3_bareinkaufspreis = Math.round(k3_selbstkosten * 0.92 * 100) / 100;
-        const k3_handlungskosten = k3_selbstkosten - k3_bareinkaufspreis;
         
+        // Berechnung des Bareinkaufspreises (etwa 92% der Selbstkosten)
+        const k3_bareinkaufspreis = Math.round(k3_selbstkosten * 0.92 * 100) / 100;
+        
+        // Handlungskosten korrekt als Differenz zwischen Selbstkosten und Bareinkaufspreis
+        const k3_handlungskosten = Math.round((k3_selbstkosten - k3_bareinkaufspreis) * 100) / 100;
+        
+        // Berechnung der Lieferantenwerte
         const k3_lieferantenskonto_prozent = zufallsZahl(2, 3);
         const k3_lieferantenrabatt_prozent = zufallsZahl(15, 25);
+        
+        // Vom Bareinkaufspreis zum Rechnungspreis (unter Berücksichtigung des Lieferantenskontos)
         const k3_rechnungspreis = Math.round(k3_bareinkaufspreis / (1 - k3_lieferantenskonto_prozent / 100) * 100) / 100;
-        const k3_lieferantenskonto = k3_rechnungspreis - k3_bareinkaufspreis;
+        const k3_lieferantenskonto = Math.round((k3_rechnungspreis - k3_bareinkaufspreis) * 100) / 100;
         
+        // Vom Rechnungspreis zum Listeneinkaufspreis
         const k3_listeneinkaufspreis = Math.round(k3_rechnungspreis / (1 - k3_lieferantenrabatt_prozent / 100) * 100) / 100;
-        const k3_lieferantenrabatt = k3_listeneinkaufspreis - k3_rechnungspreis;
+        const k3_lieferantenrabatt = Math.round((k3_listeneinkaufspreis - k3_rechnungspreis) * 100) / 100;
         
+        // Gewinnberechnung (15% der Selbstkosten)
         const k3_gewinn = Math.round(k3_selbstkosten * 0.15 * 100) / 100;
         const k3_barverkaufspreis = k3_selbstkosten + k3_gewinn;
         
-        const k3_zielverkaufspreis = Math.round(k3_barverkaufspreis * 1.05 * 100) / 100;
-        const k3_kundenskonto = k3_zielverkaufspreis - k3_barverkaufspreis;
+        // Zielverkaufspreis mit 5% Kundenskonto im Hundert
+        const k3_kundenskonto_prozent = 5;
+        const k3_kundenskonto = Math.round(k3_barverkaufspreis * (k3_kundenskonto_prozent / (100 - k3_kundenskonto_prozent)) * 100) / 100;
+        const k3_zielverkaufspreis = k3_barverkaufspreis + k3_kundenskonto;
         
-        const k3_listenverkaufspreis = Math.round(k3_zielverkaufspreis * 1.08 * 100) / 100;
-        const k3_kundenrabatt = k3_listenverkaufspreis - k3_zielverkaufspreis;
+        // Listenverkaufspreis mit 8% Kundenrabatt im Hundert
+        const k3_kundenrabatt_prozent = 8;
+        const k3_kundenrabatt = Math.round(k3_zielverkaufspreis * (k3_kundenrabatt_prozent / (100 - k3_kundenrabatt_prozent)) * 100) / 100;
+        const k3_listenverkaufspreis = k3_zielverkaufspreis + k3_kundenrabatt;
 
         return {
             kalk1: {
@@ -270,7 +283,9 @@ const KalkulationUebung = () => {
                 barverkaufspreis: k3_barverkaufspreis,
                 zielverkaufspreis: k3_zielverkaufspreis,
                 kundenskonto: k3_kundenskonto,
-                listenverkaufspreis: k3_listenverkaufspreis
+                listenverkaufspreis: k3_listenverkaufspreis,
+                selbstkosten: k3_selbstkosten,     // Neu hinzugefügt
+                handlungskosten: k3_handlungskosten // Neu hinzugefügt
             }
         };
     };
